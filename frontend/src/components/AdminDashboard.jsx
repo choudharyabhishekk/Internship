@@ -9,7 +9,6 @@ const AdminDashboard = () => {
         "http://localhost:3000/admin/getAllEmployer"
       );
       setEmployerData(response.data.allEmployer);
-      console.log(response.data.allEmployer, "><");
     } catch (error) {
       console.error("Error fetching employer data:", error);
     }
@@ -18,8 +17,6 @@ const AdminDashboard = () => {
     fetchEmployers();
   }, []);
   const handleApprove = async (employerId) => {
-    console.log(employerId);
-
     try {
       const response = await fetch(
         `http://localhost:3000/admin/approveEmployer`,

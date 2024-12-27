@@ -9,7 +9,7 @@ import axios from "axios";
 import { USER_API_END_POINT } from "@/utils/constant";
 import { setUser } from "@/redux/authSlice";
 import { toast } from "sonner";
-import logo from "../../assets/Internship.png";
+import logo from "../../assets/logo.png";
 import ProfilePhoto from "../../assets/image.png";
 
 const Navbar = () => {

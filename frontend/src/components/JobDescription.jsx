@@ -38,7 +38,6 @@ const JobDescription = () => {
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };
@@ -85,7 +84,6 @@ const JobDescription = () => {
   };
 
   if (!singleJob) return <div>Loading...</div>;
-  console.log(singleJob);
 
   return (
     <>

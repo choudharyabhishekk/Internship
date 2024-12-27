@@ -3,8 +3,6 @@ import banner from "../assets/banner.png";
 import Navbar from "./shared/Navbar";
 import Footer from "./shared/Footer";
 import { useNavigate } from "react-router-dom";
-import abtImg from "../assets/about.png";
-import Stats from "./Stats";
 import FeaturedInternships from "./FeaturedInternships";
 import FeaturedCompanies from "./FeaturedCompanies";
 import Benefits from "./Benefits";
