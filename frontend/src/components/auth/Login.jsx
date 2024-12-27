@@ -111,7 +111,7 @@ const Login = () => {
                 value="student"
                 checked={input.role === "student"}
                 onChange={changeEventHandler}
-                className="cursor-pointer"
+                className="h-4 w-4 text-sky-500 border-gray-300 focus:ring-sky-500"
               />
               <Label htmlFor="r1" className="text-md text-gray-800">
                 Student
@@ -124,7 +124,7 @@ const Login = () => {
                 value="recruiter"
                 checked={input.role === "recruiter"}
                 onChange={changeEventHandler}
-                className="cursor-pointer"
+                className="h-4 w-4 text-sky-500 border-gray-300 focus:ring-sky-500 "
               />
               <Label htmlFor="r2" className="text-md text-gray-800">
                 Recruiter
