@@ -23,7 +23,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
+const PORT = "https://internship-i37i.onrender.com";
 
 // api's
 app.use("/api/v1/user", userRoute);
