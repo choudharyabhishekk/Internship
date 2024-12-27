@@ -19,12 +19,6 @@ const benefits = [
     description:
       "Work on meaningful projects and build a strong foundation for your career.",
   },
-  //   {
-  //     icon: Lightbulb,
-  //     title: "Learn & Grow",
-  //     description:
-  //       "Access resources, workshops, and training to enhance your skills.",
-  //   },
 ];
 
 export default function Benefits() {
@@ -34,7 +28,7 @@ export default function Benefits() {
         <h2 className="text-3xl font-bold text-center text-zinc-800 mb-12">
           Why Choose Us?
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ">
           {benefits.map((benefit, index) => (
             <div key={index} className="text-center">
               <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-4">

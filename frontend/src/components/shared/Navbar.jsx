@@ -253,17 +253,6 @@ const Navbar = () => {
                       Internship
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink
-                      to="/profile"
-                      onClick={toggleMobileMenu}
-                      className={({ isActive }) =>
-                        isActive ? "text-primary " : "hover:text-primary "
-                      }
-                    >
-                      Dashboard
-                    </NavLink>
-                  </li>
                 </>
               )}
               {!user ? (
