@@ -14,6 +14,6 @@ Technical Highlights:
 - **Backend API:** Designed for extensibility and performance, following REST principles with a future roadmap to implement GraphQL for advanced querying needs.
 
 ## Future Enhancements:
-Chat and video call support using WebRTC: Users and employers can communicate in real-time via text and video calls.
-Admin Dashboard: Implement advanced analytics and monitoring for employers.
-Expanding GraphQL integration for better API efficiency and flexibility.
+- Chat and video call support using WebRTC: Users and employers can communicate in real-time via text and video calls.
+- Admin Dashboard: Implement advanced analytics and monitoring for employers.
+- Expanding GraphQL integration for better API efficiency and flexibility.
