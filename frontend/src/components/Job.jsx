@@ -16,7 +16,7 @@ const Job = ({ job }) => {
   };
 
   return (
-    <div className="rounded-xl p-4 m-3 bg-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:shadow-lg  duration-300">
+    <div className="rounded-xl p-4 m-3 bg-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:shadow-lg  duration-300">
       {/* Header Section */}
       <div
         className="header flex items-center  cursor-pointer"
