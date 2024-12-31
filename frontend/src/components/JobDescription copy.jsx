@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -15,24 +15,98 @@ import {
 import { toast } from "sonner";
 import { setSingleJob, setSearchedQuery } from "@/redux/jobSlice";
 import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
 
-const JobDescription = () => {
-  const { singleJob, allJobs } = useSelector((store) => store.job);
+const JobDescriptionBackup = () => {
+  // Redux states
+  const { singleJob } = useSelector((store) => store.job);
+  const { allJobs } = useSelector((store) => store.job);
   const { user } = useSelector((store) => store.auth);
-  const [isApplied, setIsApplied] = useState(false);
+
+  // Local states
+  const isInitiallyApplied =
+    singleJob?.applications?.some(
+      (application) => application.applicant === user?._id
+    ) || false;
+  const [isApplied, setIsApplied] = useState(isInitiallyApplied);
   const [similarJobs, setSimilarJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Hooks
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const jobId = params.id;
 
-  // Memoized functions
-  const formatDate = useCallback((dateString) => {
+  // Initialize get all jobs
+  useGetAllJobs();
+
+  // Function to find similar jobs
+  const findSimilarJobs = () => {
+    if (!singleJob || !allJobs) return [];
+
+    // Filter jobs based on similar title keywords, company, or location
+    const similar = allJobs.filter((job) => {
+      if (job._id === singleJob._id) return false; // Exclude current job
+
+      // Check if job titles share common keywords
+      const currentTitleWords = singleJob.title.toLowerCase().split(" ");
+      const otherTitleWords = job.title.toLowerCase().split(" ");
+      const hasCommonWords = currentTitleWords.some(
+        (word) => otherTitleWords.includes(word) && word.length > 3
+      );
+
+      // Check if same company or location
+      const sameCompany = job.company?._id === singleJob.company?._id;
+      const sameLocation =
+        job.location?.toLowerCase() === singleJob.location?.toLowerCase();
+
+      return hasCommonWords || sameCompany || sameLocation;
+    });
+
+    // Return up to 3 similar jobs
+    return similar.slice(0, 3);
+  };
+  //handle similar jobs click
+  const handleJobClick = (jobId, title) => {
+    const friendlyURL = title
+      .split(" ")
+      .join("-")
+      .toLowerCase()
+      .replace(/[^\w\-]/g, ""); // Generate friendly URL
+
+    navigate(`/job/${friendlyURL}/${jobId}`); // Navigate to the new route
+  };
+
+  // Handle job application
+  const applyJobHandler = async () => {
+    try {
+      const res = await axios.get(
+        `${APPLICATION_API_END_POINT}/apply/${jobId}`,
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        setIsApplied(true);
+        const updatedSingleJob = {
+          ...singleJob,
+          applications: [...singleJob.applications, { applicant: user?._id }],
+        };
+        dispatch(setSingleJob(updatedSingleJob));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Error applying to job");
+    }
+  };
+
+  // Format date helper function
+  const formatDate = (dateString) => {
     const todaysDate = new Date();
     const postingDate = new Date(dateString);
     const dateDiff = Math.abs(todaysDate - postingDate);
+
     const days = Math.floor(dateDiff / (24 * 60 * 60 * 1000));
     const hours = Math.floor(
       (dateDiff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
@@ -42,81 +116,16 @@ const JobDescription = () => {
     if (days > 0) return `${days} day${days > 1 ? "s" : ""} ago`;
     if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  }, []);
+  };
 
-  const findSimilarJobs = useCallback(() => {
-    if (!singleJob || !allJobs) return [];
-
-    return allJobs
-      .filter((job) => {
-        if (job._id === singleJob._id) return false;
-
-        const currentTitleWords = new Set(
-          singleJob.title
-            .toLowerCase()
-            .split(" ")
-            .filter((word) => word.length > 3)
-        );
-        const otherTitleWords = job.title.toLowerCase().split(" ");
-
-        const hasCommonWords = otherTitleWords.some((word) =>
-          currentTitleWords.has(word)
-        );
-        const sameCompany = job.company?._id === singleJob.company?._id;
-        const sameLocation =
-          job.location?.toLowerCase() === singleJob.location?.toLowerCase();
-
-        return hasCommonWords || sameCompany || sameLocation;
-      })
-      .slice(0, 3);
-  }, [singleJob, allJobs]);
-
-  const handleJobClick = useCallback(
-    (jobId, title) => {
-      const friendlyURL = title.toLowerCase().replace(/[^\w-]/g, "-");
-      navigate(`/job/${friendlyURL}/${jobId}`);
-    },
-    [navigate]
-  );
-
-  // API calls
-  const applyJobHandler = useCallback(async () => {
-    if (isApplied) return;
-
-    try {
-      const res = await axios.get(
-        `${APPLICATION_API_END_POINT}/apply/${jobId}`,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (res.data.success) {
-        setIsApplied(true);
-        dispatch(
-          setSingleJob({
-            ...singleJob,
-            applications: [...singleJob.applications, { applicant: user?._id }],
-          })
-        );
-        toast.success(res.data.message);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Error applying to job");
-    }
-  }, [jobId, isApplied, singleJob, user?._id, dispatch]);
-
-  // Effects
+  // Fetch single job data
   useEffect(() => {
-    const controller = new AbortController();
-
     const fetchSingleJob = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
           withCredentials: true,
-          signal: controller.signal,
         });
-
         if (res.data.success) {
           dispatch(setSingleJob(res.data.job));
           setIsApplied(
@@ -126,65 +135,48 @@ const JobDescription = () => {
           );
         }
       } catch (error) {
-        if (!axios.isCancel(error)) {
-          toast.error("Error fetching job details");
-        }
+        console.error(error);
+        toast.error("Error fetching job details");
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchSingleJob();
-    return () => controller.abort();
   }, [jobId, dispatch, user?._id]);
 
+  // Update similar jobs when single job or all jobs change
   useEffect(() => {
     if (singleJob && allJobs) {
-      setSimilarJobs(findSimilarJobs());
+      const similar = findSimilarJobs();
+      setSimilarJobs(similar);
     }
-  }, [singleJob, allJobs, findSimilarJobs]);
+  }, [singleJob, allJobs]);
 
+  // Clear search query on unmount
   useEffect(() => {
-    return () => dispatch(setSearchedQuery(""));
-  }, [dispatch]);
+    return () => {
+      dispatch(setSearchedQuery(""));
+    };
+  }, []);
 
-  // Memoized components
-  const SimilarJobCard = useMemo(
-    () =>
-      ({ job }) =>
-        (
-          <div
-            className="cursor-pointer"
-            onClick={() => handleJobClick(job?._id, job?.title)}
-          >
-            <div className="group relative mt-4 bg-white p-4 cursor-pointer rounded-xl border border-gray-100 hover:border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
-              {/* Component content remains the same */}
-            </div>
-          </div>
-        ),
-    [handleJobClick]
-  );
-
-  if (isLoading) {
+  if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
-  }
 
-  if (!singleJob) {
+  if (!singleJob)
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-lg">Job not found</div>
       </div>
     );
-  }
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center max-w-7xl mx-auto gap-6 p-4">
+    <div className="flex justify-center mx-auto sm:flex-wrap md:flex-row gap-6 p-4">
       {/* Main Job Details Section */}
-      <div className="max-w-4xl p-6 bg-white rounded-lg shadow-sm">
+      <div className="max-w-5xl p-6 bg-white rounded-lg shadow-sm">
         <h1 className="text-3xl font-bold mb-5">{singleJob.title}</h1>
 
         {/* Company Header */}
@@ -396,4 +388,4 @@ const JobDescription = () => {
   );
 };
 
-export default React.memo(JobDescription);
+export default JobDescriptionBackup;
