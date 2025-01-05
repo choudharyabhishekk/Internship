@@ -1,37 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronRight, Mail, Phone } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Label } from "./ui/label";
-import AppliedJobTable from "./AppliedJobTable";
-import UpdateProfileDialog from "./UpdateProfileDialog";
-import { useSelector } from "react-redux";
-import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import ProfilePhoto from "../assets/image.png";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { USER_API_END_POINT } from "@/utils/constant";
 
-const Profile = () => {
-  useGetAppliedJobs();
-  const [open, setOpen] = useState(false);
-  const { user } = useSelector((store) => store.auth);
-  const navigate = useNavigate();
-  const handlePublicProfile = () => {
-    const username = user.email.split("@")[0];
-    const id = user._id;
-    navigate(`/profile/${username}?id=${id}`);
-  };
+const PublicProfile = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(
+          `${USER_API_END_POINT}/fetchuser?id=${id}`
+        );
+        const data = await response.json();
+
+        if (data.success) {
+          setUser(data.user);
+        } else {
+          setError(data.message || "User not found.");
+        }
+      } catch (error) {
+        setError("Error fetching user data. Please try again.");
+      } finally {
+        setLoading(false); // Set loading to false after fetch attempt
+      }
+    };
+
+    if (id) {
+      fetchUser();
+    } else {
+      setError("Invalid ID."); // Set error if ID is missing
+      setLoading(false);
+    }
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen text-center font-medium my-12">
+        <span className="text-xl bg-red-500 rounded-lg text-white p-3">
+          Error: User Not Found
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="max-w-2xl mx-auto py-14 sm:px-6 lg:px-8">
-        {!user?.profile?.resume && (
-          <div
-            className="bg-red-100 border border-red-400 text-center text-red-700 px-4 py-3 rounded-lg relative mb-4"
-            role="alert"
-          >
-            <span className="block sm:inline">Please update your profile.</span>
-          </div>
-        )}
-
         {/* Header + Profile Details Combined Section */}
         <div className="bg-white border border-gray-100 rounded-2xl mx-auto p-6 mb-6">
           <div className="flex items-center justify-center">
@@ -45,7 +72,6 @@ const Profile = () => {
                 />
               </Avatar>
 
-              {/* <FaUserCircle className="h-16 w-16 text-gray-500" /> */}
               <div>
                 <h2 className="text-2xl font-bold text-center text-gray-800">
                   {user?.fullname || "User Name"}
@@ -68,15 +94,6 @@ const Profile = () => {
                   <Phone className="text-gray-400 w-6" />
                   <span>{user?.phoneNumber || "NA"}</span>
                 </div>
-              </div>
-              <div>
-                <button
-                  title="Edit Profile"
-                  onClick={() => setOpen(true)}
-                  className="text-right border border-zinc-100 px-4 py-4  rounded-md text-sm hover:bg-zinc-50"
-                >
-                  <ChevronRight />
-                </button>
               </div>
             </div>
             <div className="mb-4">
@@ -103,32 +120,16 @@ const Profile = () => {
                   {user?.profile?.resumeOriginalName || "Resume"}
                 </a>
               ) : (
-                <button
-                  onClick={() => setOpen(true)}
-                  className="text-left border p-4 rounded-md text-sm"
-                >
+                <button className="text-left border p-4 rounded-md text-sm">
                   Resume not uploaded
                 </button>
               )}
             </div>
-            <div
-              className=" border border-gray-200 rounded-lg p-4 w-full hover:underline cursor-pointer"
-              onClick={handlePublicProfile}
-            >
-              View Public Profile
-            </div>
           </div>
         </div>
-
-        {/* Applied Jobs Section */}
-        <div className="w-full mx-auto border border-gray-100 bg-white rounded-2xl mt-6">
-          <h1 className="font-bold text-lg my-5 px-6">Applied Jobs</h1>
-          <AppliedJobTable />
-        </div>
       </div>
-      <UpdateProfileDialog open={open} setOpen={setOpen} />
     </div>
   );
 };
 
-export default Profile;
+export default PublicProfile;

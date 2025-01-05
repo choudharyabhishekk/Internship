@@ -16,11 +16,11 @@ const Job = ({ job }) => {
   };
 
   return (
-    <div className="rounded-xl p-4 m-3 bg-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:shadow-lg  duration-300">
+    <div className="rounded-xl p-4 m-3 bg-white transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 hover:shadow-lg  duration-300 shadow-sm">
       {/* Header Section */}
       <div
         className="header flex items-center  cursor-pointer"
-        onClick={() => handleJobClick(job?._id, job?.title)}
+        onClick={() => handleJobClick(job?._id, job?.title, navigate)}
       >
         <div className="company-icon">
           <Avatar className="w-10 h-10">
@@ -35,13 +35,13 @@ const Job = ({ job }) => {
 
       {/* Job Content */}
       <div
-        className="job-content mt-3 cursor-pointer"
-        onClick={() => handleJobClick(job?._id, job?.title)}
+        className="job-content mt-3  cursor-pointer"
+        onClick={() => handleJobClick(job?._id, job?.title, navigate)}
       >
         <h1 className="font-bold text-lg">{job?.title}</h1>
         <p className="text-sm my-2 text-zinc-500">
           {job?.description?.split(" ").length > 20
-            ? `${job?.description.split(" ").slice(0, 18).join(" ")}...`
+            ? `${job?.description.split(" ").slice(0, 12).join(" ")}...`
             : job?.description}
         </p>
         <div className="tags flex gap-2 mt-3">

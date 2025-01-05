@@ -13,6 +13,8 @@ import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 import Layout from "./components/shared/Layout";
+import NotFound from "./components/NotFound";
+import PublicProfile from "./components/PublicProfile";
 
 const appRouter = createBrowserRouter([
   {
@@ -23,7 +25,22 @@ const appRouter = createBrowserRouter([
       </Layout>
     ),
   },
-
+  {
+    path: "*",
+    element: (
+      <Layout>
+        <NotFound />
+      </Layout>
+    ),
+  },
+  {
+    path: "/profile/:username",
+    element: (
+      <Layout>
+        <PublicProfile />
+      </Layout>
+    ),
+  },
   {
     path: "/login",
     element: (

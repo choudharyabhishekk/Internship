@@ -256,3 +256,35 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+export const getUserByID = async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) {
+      return res.status(400).json({
+        message: "Missing required parameters: id.",
+        success: false,
+      });
+    }
+
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found. Please check the userID.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: `User profile: ${user.fullname}`,
+      user,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({
+      message: "An error occurred while fetching the user.",
+      error: error.message,
+      success: false,
+    });
+  }
+};

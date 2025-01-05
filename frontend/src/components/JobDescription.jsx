@@ -322,7 +322,7 @@ const JobDescription = () => {
                 className="cursor-pointer "
                 onClick={() => handleJobClick(job?._id, job?.title)}
               >
-                <div className="group relative mt-4 bg-white p-4 cursor-pointer rounded-xl border border-gray-100 hover:border-blue-100 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+                <div className="group relative mt-4 bg-white p-4 cursor-pointer rounded-xl border border-gray-100 hover:border-blue-100 shadow-md hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
                   {/* Top section with logo and company name */}
                   <div className="flex items-start gap-4">
                     <div className="relative">

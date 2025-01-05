@@ -14,13 +14,15 @@ import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { APPLICATION_API_END_POINT } from "@/utils/constant";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const shortlistingStatus = ["Accepted", "Rejected"];
 
 const ApplicantsTable = () => {
+  const navigate = useNavigate();
   const { applicants } = useSelector((store) => store.application);
-
   const statusHandler = async (status, id) => {
+    console.log("called");
     try {
       axios.defaults.withCredentials = true;
       const res = await axios.post(
@@ -35,7 +37,10 @@ const ApplicantsTable = () => {
       toast.error(error.response.data.message);
     }
   };
-
+  const handlePublicProfile = (id, email) => {
+    const username = email.split("@")[0];
+    navigate(`/profile/${username}?id=${id}`);
+  };
   return (
     <div>
       <Table>
@@ -54,7 +59,18 @@ const ApplicantsTable = () => {
           {applicants &&
             applicants?.applications?.map((item) => (
               <tr key={item._id}>
-                <TableCell>{item?.applicant?.fullname}</TableCell>
+                <TableCell
+                  title="View Profile"
+                  onClick={() =>
+                    handlePublicProfile(
+                      item?.applicant?._id,
+                      item?.applicant?.email
+                    )
+                  }
+                  className="cursor-pointer text-blue-500"
+                >
+                  {item?.applicant?.fullname}
+                </TableCell>
                 <TableCell>{item?.applicant?.email}</TableCell>
                 <TableCell>{item?.applicant?.phoneNumber}</TableCell>
                 <TableCell>
