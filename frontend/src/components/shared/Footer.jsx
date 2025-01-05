@@ -32,13 +32,16 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-gray-800">Social</h3>
             <ul className="mt-4 space-y-2">
               <li>
-                <a href="#" className="text-gray-600 hover:text-gray-800">
+                <a
+                  href="https://github.com/choudharyabhishekk"
+                  className="text-gray-600 hover:text-gray-800"
+                >
                   GitHub
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com/choudharyabhishekk"
+                  href="https://www.linkedin.com/in/abhishekchoudhary010/"
                   target="_blank"
                   className="text-gray-600 hover:text-gray-800"
                 >
