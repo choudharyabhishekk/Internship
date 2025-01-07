@@ -7,7 +7,7 @@ const Hero = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
       <div className="grid lg:grid-cols-2 gap-4 items-center">
         <div>
-          <h1 className="text-5xl font-bold leading-tight mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-8">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500">
               Launch Your Career
             </span>

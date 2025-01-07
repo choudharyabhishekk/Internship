@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Calendar,
   ChevronRight,
+  BadgeCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 import { setSingleJob, setSearchedQuery } from "@/redux/jobSlice";
@@ -274,9 +275,13 @@ const JobDescription = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Building className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">
+              <div className="flex gap-1 items-center text-sm">
                 Company: {singleJob.company?.name}
-              </span>
+                <BadgeCheck
+                  className="h-5 w-5 fill-blue-500 text-white"
+                  title="Company Verified"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-muted-foreground" />
