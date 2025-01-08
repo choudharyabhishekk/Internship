@@ -40,8 +40,8 @@ const Job = ({ job }) => {
       >
         <h1 className="font-bold text-lg">{job?.title}</h1>
         <p className="text-sm my-2 text-zinc-500">
-          {job?.description?.split(" ").length > 20
-            ? `${job?.description.split(" ").slice(0, 12).join(" ")}...`
+          {job?.description?.length > 10
+            ? `${job?.description.split(" ").slice(0, 10).join(" ")}...`
             : job?.description}
         </p>
         <div className="tags flex gap-2 mt-3">

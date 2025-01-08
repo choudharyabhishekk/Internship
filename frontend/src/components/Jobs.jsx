@@ -60,7 +60,7 @@ const Jobs = () => {
 
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [visibleJobs, setVisibleJobs] = useState([]);
-  const [jobsToShow, setJobsToShow] = useState(10);
+  const [jobsToShow, setJobsToShow] = useState(9);
   const [filters, setLocalFilters] = useState({
     search: "",
     location: "",
@@ -169,9 +169,9 @@ const Jobs = () => {
             <div className="flex justify-center mt-4">
               <button
                 onClick={handleLoadMore}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
+                className="border border-blue-500 text-blue-500 font-semibold hover:bg-blue-700 hover:text-white py-2 px-4 rounded-lg"
               >
-                Load More
+                View More
               </button>
             </div>
           )}
