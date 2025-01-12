@@ -88,7 +88,7 @@ export default function FeaturedInternships() {
                     <p className="mt-2 text-sm text-zinc-600 line-clamp-2">
                       {job?.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div className="flex flex-wrap gap-1 mt-4">
                       {[
                         job?.jobType,
                         `$${job?.salary} Per Hour`,
