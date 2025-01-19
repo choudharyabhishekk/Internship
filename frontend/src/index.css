@@ -6,7 +6,8 @@
 
 body {
   font-family: "Open Sans", serif;
-  background-color: #f9f9f9;
+  background-color: #f1f3f4;
+  /* background-color: #f9f9f9; */
 }
 
 @layer base {
