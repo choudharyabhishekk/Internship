@@ -119,7 +119,7 @@ const JobSearch = ({
         <button
           type="button"
           onClick={handleClearFilters}
-          className="px-6 py-2 bg-gray-100  text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+          className="px-6 py-2 bg-gray-200  text-gray-700 font-medium rounded-lg hover:bg-gray-100 transition-colors"
         >
           Clear Filters
         </button>
