@@ -23,6 +23,7 @@ app.use(cors({
     'http://localhost:5173', 
     'https://moccasin-monkey-843248.hostingersite.com'
   ],
+  credentials: true 
 }));
 
 
