@@ -12,6 +12,7 @@ import {
   Calendar,
   ChevronRight,
   BadgeCheck,
+  SearchX,
 } from "lucide-react";
 import { toast } from "sonner";
 import { setSingleJob, setSearchedQuery } from "@/redux/jobSlice";
