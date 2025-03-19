@@ -19,8 +19,12 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://moccasin-monkey-843248.hostingersite.com'],
+  origin: ['https://internship.abhix.io',
+    'http://localhost:5173', 
+    'https://moccasin-monkey-843248.hostingersite.com'
+  ],
 }));
+
 
 
 const PORT = process.env.PORT || 3000;
