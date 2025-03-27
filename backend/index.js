@@ -15,18 +15,19 @@ const _dirname = path.resolve();
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cors({
+    origin: [
+      "https://internship.abhix.io",
+      "http://localhost:5173",
+      "https://moccasin-monkey-843248.hostingersite.com",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
-
-
-app.use(cors({
-  origin: ['https://internship.abhix.io',
-    'http://localhost:5173', 
-    'https://moccasin-monkey-843248.hostingersite.com'
-  ],
-  credentials: true 
-}));
-
-
 
 const PORT = process.env.PORT || 3000;
 

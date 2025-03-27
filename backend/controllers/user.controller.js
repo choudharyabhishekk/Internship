@@ -108,8 +108,10 @@ export const login = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
-        sameSite: "strict",
+        httpOnly: true, // Corrected from httpsOnly to httpOnly
+        secure: process.env.NODE_ENV === "production", // Added secure flag for production
+        sameSite: "lax", // Changed from 'strict' to 'lax' for better cross-site compatibility
+        domain: process.env.NODE_ENV === "production" ? ".abhix.io" : undefined, // Optional: set domain in production
       })
       .json({
         message: `Welcome back ${user.fullname}`,
@@ -117,7 +119,11 @@ export const login = async (req, res) => {
         success: true,
       });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
   }
 };
 export const logout = async (req, res) => {
