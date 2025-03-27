@@ -18,15 +18,19 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: [
-      "https://internship.abhix.io",
-      "http://localhost:5173",
-      "https://moccasin-monkey-843248.hostingersite.com",
+    origin: "https://internship.abhix.io", // Exact frontend URL
+    credentials: true, // Allow credentials
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Credentials",
     ],
-    credentials: true,
   })
 );
 
+// Ensure this comes before your routes
+app.options("*", cors()); // Enable preflight requests for all routes
 app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
